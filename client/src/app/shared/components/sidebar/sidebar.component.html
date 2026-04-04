@@ -1,0 +1,55 @@
+<div class="sidebar-container" [class.collapsed]="isCollapsed">
+  <!-- Logo Section -->
+  <div class="sidebar-logo">
+    <div class="logo-icon">
+      <mat-icon>account_balance</mat-icon>
+    </div>
+    <span class="logo-text" *ngIf="!isCollapsed">SecureBank</span>
+  </div>
+
+  <!-- Navigation Menu -->
+  <nav class="sidebar-nav">
+    <mat-nav-list>
+      <!-- Main Menu Items -->
+      <a mat-list-item
+         *ngFor="let item of menuItems"
+         [routerLink]="item.route"
+         routerLinkActive="active"
+         [routerLinkActiveOptions]="{ exact: item.exact }"
+         [matTooltip]="isCollapsed ? item.label : ''"
+         matTooltipPosition="right"
+         (click)="onMenuItemClick()">
+        <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+        <span matListItemTitle *ngIf="!isCollapsed">{{ item.label }}</span>
+      </a>
+
+      <!-- Admin Section -->
+      <ng-container *ngIf="authService.isAdmin()">
+        <mat-divider class="nav-divider"></mat-divider>
+        
+        <div class="nav-section-title" *ngIf="!isCollapsed">
+          Admin
+        </div>
+
+        <a mat-list-item
+           *ngFor="let item of adminMenuItems"
+           [routerLink]="item.route"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{ exact: item.exact }"
+           [matTooltip]="isCollapsed ? item.label : ''"
+           matTooltipPosition="right"
+           (click)="onMenuItemClick()">
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <span matListItemTitle *ngIf="!isCollapsed">{{ item.label }}</span>
+        </a>
+      </ng-container>
+    </mat-nav-list>
+  </nav>
+
+  <!-- Bottom Section -->
+  <div class="sidebar-footer" *ngIf="!isCollapsed">
+    <div class="footer-text">
+      <small>SecureBank v1.0</small>
+    </div>
+  </div>
+</div>

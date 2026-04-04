@@ -1,0 +1,142 @@
+<div class="analytics-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">Analytics</h1>
+      <p class="page-subtitle">Visualize your financial data and trends</p>
+    </div>
+    <mat-form-field appearance="outline" class="year-select">
+      <mat-label>Year</mat-label>
+      <mat-select [value]="selectedYear" (selectionChange)="onYearChange($event.value)">
+        <mat-option *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner diameter="48"></mat-spinner>
+    <p>Loading analytics...</p>
+  </div>
+
+  <ng-container *ngIf="!isLoading">
+    <!-- Summary Cards -->
+    <div class="summary-grid">
+      <mat-card class="summary-card income">
+        <mat-card-content>
+          <div class="summary-icon">
+            <mat-icon>trending_up</mat-icon>
+          </div>
+          <div class="summary-info">
+            <span class="summary-label">Total Income</span>
+            <span class="summary-value">{{ summary.totalCredit | currencyFormat }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="summary-card expense">
+        <mat-card-content>
+          <div class="summary-icon">
+            <mat-icon>trending_down</mat-icon>
+          </div>
+          <div class="summary-info">
+            <span class="summary-label">Total Expenses</span>
+            <span class="summary-value">{{ summary.totalDebit | currencyFormat }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="summary-card balance">
+        <mat-card-content>
+          <div class="summary-icon">
+            <mat-icon>account_balance_wallet</mat-icon>
+          </div>
+          <div class="summary-info">
+            <span class="summary-label">Net Balance</span>
+            <span class="summary-value" [class.positive]="summary.netBalance >= 0" [class.negative]="summary.netBalance < 0">
+              {{ summary.netBalance | currencyFormat }}
+            </span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="summary-card transactions">
+        <mat-card-content>
+          <div class="summary-icon">
+            <mat-icon>receipt_long</mat-icon>
+          </div>
+          <div class="summary-info">
+            <span class="summary-label">Transactions</span>
+            <span class="summary-value">{{ summary.transactionCount }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Charts Grid -->
+    <div class="charts-grid">
+      <!-- Monthly Transactions Bar Chart -->
+      <mat-card class="chart-card bar-chart">
+        <mat-card-header>
+          <mat-card-title>Monthly Overview</mat-card-title>
+          <mat-card-subtitle>Income vs Expenses by month</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="chart-container">
+            <canvas baseChart
+                    [data]="barChartData"
+                    [options]="barChartOptions"
+                    [type]="barChartType">
+            </canvas>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Credit vs Debit Doughnut Chart -->
+      <mat-card class="chart-card doughnut-chart">
+        <mat-card-header>
+          <mat-card-title>Income vs Expenses</mat-card-title>
+          <mat-card-subtitle>Total distribution for {{ selectedYear }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="chart-container doughnut">
+            <canvas baseChart
+                    [data]="doughnutChartData"
+                    [options]="doughnutChartOptions"
+                    [type]="doughnutChartType">
+            </canvas>
+          </div>
+          <div class="chart-legend">
+            <div class="legend-item">
+              <span class="legend-color income"></span>
+              <span class="legend-label">Income</span>
+              <span class="legend-value">{{ summary.totalCredit | currencyFormat }}</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color expense"></span>
+              <span class="legend-label">Expenses</span>
+              <span class="legend-value">{{ summary.totalDebit | currencyFormat }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Net Balance Trend -->
+      <mat-card class="chart-card line-chart">
+        <mat-card-header>
+          <mat-card-title>Balance Trend</mat-card-title>
+          <mat-card-subtitle>Monthly net balance over time</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="chart-container">
+            <canvas baseChart
+                    [data]="lineChartData"
+                    [options]="lineChartOptions"
+                    [type]="lineChartType">
+            </canvas>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,264 @@
+.analytics-container {
+  min-height: 100%;
+}
+
+/* Page Header */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-lg);
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+}
+
+.page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.page-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.year-select {
+  width: 120px;
+}
+
+/* Loading State */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xxl);
+  gap: var(--spacing-md);
+}
+
+.loading-container p {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* Summary Grid */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+}
+
+.summary-card {
+  border-radius: var(--radius-lg);
+}
+
+.summary-card mat-card-content {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg) !important;
+}
+
+.summary-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.summary-icon mat-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+}
+
+.summary-card.income .summary-icon {
+  background-color: rgba(76, 175, 80, 0.15);
+  color: var(--success-color);
+}
+
+.summary-card.expense .summary-icon {
+  background-color: rgba(244, 67, 54, 0.15);
+  color: var(--error-color);
+}
+
+.summary-card.balance .summary-icon {
+  background-color: rgba(26, 35, 126, 0.15);
+  color: var(--primary-color);
+}
+
+.summary-card.transactions .summary-icon {
+  background-color: rgba(0, 188, 212, 0.15);
+  color: var(--accent-color);
+}
+
+.summary-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.summary-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.summary-value.positive {
+  color: var(--success-color);
+}
+
+.summary-value.negative {
+  color: var(--error-color);
+}
+
+/* Charts Grid */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--spacing-lg);
+}
+
+.chart-card {
+  border-radius: var(--radius-lg);
+}
+
+.chart-card mat-card-header {
+  padding: var(--spacing-lg) var(--spacing-lg) 0 !important;
+}
+
+.chart-card mat-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.chart-card mat-card-subtitle {
+  margin-top: 4px;
+}
+
+.chart-card mat-card-content {
+  padding: var(--spacing-lg) !important;
+}
+
+/* Bar Chart */
+.bar-chart {
+  grid-column: span 8;
+}
+
+/* Doughnut Chart */
+.doughnut-chart {
+  grid-column: span 4;
+}
+
+/* Line Chart */
+.line-chart {
+  grid-column: span 12;
+}
+
+/* Chart Container */
+.chart-container {
+  position: relative;
+  height: 300px;
+}
+
+.chart-container.doughnut {
+  height: 220px;
+}
+
+/* Chart Legend */
+.chart-legend {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--border-color);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.legend-color.income {
+  background-color: var(--success-color);
+}
+
+.legend-color.expense {
+  background-color: var(--error-color);
+}
+
+.legend-label {
+  flex: 1;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.legend-value {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .bar-chart {
+    grid-column: span 12;
+  }
+
+  .doughnut-chart {
+    grid-column: span 6;
+  }
+
+  .line-chart {
+    grid-column: span 6;
+  }
+}
+
+@media (max-width: 768px) {
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .doughnut-chart,
+  .line-chart {
+    grid-column: span 12;
+  }
+
+  .chart-container {
+    height: 250px;
+  }
+
+  .page-header {
+    flex-direction: column;
+  }
+
+  .year-select {
+    width: 100%;
+  }
+}

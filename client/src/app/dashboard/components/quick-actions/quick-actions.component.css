@@ -1,0 +1,104 @@
+.quick-actions-card {
+  height: 100%;
+}
+
+mat-card-header {
+  padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-md) !important;
+}
+
+mat-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 !important;
+}
+
+mat-card-content {
+  padding: 0 var(--spacing-lg) var(--spacing-lg) !important;
+}
+
+/* Actions Grid */
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md);
+}
+
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-lg) var(--spacing-md);
+  background-color: var(--background-color);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.action-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.action-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--spacing-sm);
+  transition: transform var(--transition-fast);
+}
+
+.action-item:hover .action-icon {
+  transform: scale(1.1);
+}
+
+.action-icon mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.action-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--text-primary);
+}
+
+/* Color Variants */
+.action-item.primary .action-icon {
+  background-color: rgba(26, 35, 126, 0.15);
+  color: var(--primary-color);
+}
+
+.action-item.accent .action-icon {
+  background-color: rgba(0, 188, 212, 0.15);
+  color: var(--accent-color);
+}
+
+.action-item.warn .action-icon {
+  background-color: rgba(255, 152, 0, 0.15);
+  color: var(--warning-color);
+}
+
+.action-item.info .action-icon {
+  background-color: rgba(33, 150, 243, 0.15);
+  color: var(--info-color);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .actions-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .actions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

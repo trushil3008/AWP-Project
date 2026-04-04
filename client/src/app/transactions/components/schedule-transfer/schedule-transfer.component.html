@@ -1,0 +1,139 @@
+<div class="schedule-transfer-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1 class="page-title">Scheduled Transfers</h1>
+    <p class="page-subtitle">Schedule transfers for a future date</p>
+  </div>
+
+  <div class="content-grid">
+    <!-- Schedule Form -->
+    <mat-card class="schedule-form-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>schedule</mat-icon>
+          Schedule New Transfer
+        </mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <form [formGroup]="scheduleForm" (ngSubmit)="onSubmit()" class="schedule-form">
+          <!-- Beneficiary Selection -->
+          <mat-form-field appearance="outline">
+            <mat-label>Select Beneficiary</mat-label>
+            <mat-select formControlName="beneficiaryId">
+              <mat-option *ngFor="let b of beneficiaries" [value]="b.id">
+                <div class="beneficiary-option">
+                  <span>{{ b.name }}</span>
+                  <small>{{ b.accountNumber }}</small>
+                </div>
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>person</mat-icon>
+            <mat-error *ngIf="scheduleForm.get('beneficiaryId').hasError('required')">
+              Please select a beneficiary
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Amount -->
+          <mat-form-field appearance="outline">
+            <mat-label>Amount</mat-label>
+            <input matInput type="number" formControlName="amount" placeholder="0.00">
+            <span matPrefix class="currency-prefix">$</span>
+            <mat-error *ngIf="scheduleForm.get('amount').hasError('required')">
+              Amount is required
+            </mat-error>
+            <mat-error *ngIf="scheduleForm.get('amount').hasError('min')">
+              Amount must be greater than 0
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Scheduled Date -->
+          <mat-form-field appearance="outline">
+            <mat-label>Scheduled Date</mat-label>
+            <input matInput 
+                   [matDatepicker]="picker" 
+                   formControlName="scheduledDate"
+                   [min]="minDate">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="scheduleForm.get('scheduledDate').hasError('required')">
+              Please select a date
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Description -->
+          <mat-form-field appearance="outline">
+            <mat-label>Description (Optional)</mat-label>
+            <input matInput formControlName="description" placeholder="What's this for?">
+            <mat-icon matPrefix>notes</mat-icon>
+          </mat-form-field>
+
+          <!-- Submit Button -->
+          <button mat-raised-button 
+                  color="primary" 
+                  type="submit"
+                  [disabled]="isLoading || scheduleForm.invalid"
+                  class="submit-btn">
+            <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+            <mat-icon *ngIf="!isLoading">schedule_send</mat-icon>
+            <span *ngIf="!isLoading">Schedule Transfer</span>
+          </button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Scheduled Transfers List -->
+    <mat-card class="scheduled-list-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>event</mat-icon>
+          Upcoming Transfers
+        </mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <!-- Loading State -->
+        <div class="loading-container" *ngIf="isLoadingScheduled">
+          <mat-spinner diameter="40"></mat-spinner>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" *ngIf="!isLoadingScheduled && scheduledTransfers.length === 0">
+          <mat-icon>event_busy</mat-icon>
+          <p>No scheduled transfers</p>
+          <small>Schedule a transfer to see it here</small>
+        </div>
+
+        <!-- Transfers List -->
+        <div class="transfers-list" *ngIf="!isLoadingScheduled && scheduledTransfers.length > 0">
+          <div class="transfer-item" *ngFor="let transfer of scheduledTransfers">
+            <div class="transfer-icon">
+              <mat-icon>schedule</mat-icon>
+            </div>
+            
+            <div class="transfer-details">
+              <div class="transfer-primary">
+                <span class="beneficiary-name">{{ transfer.receiverName || 'Recipient' }}</span>
+                <span class="transfer-amount">{{ transfer.amount | currencyFormat }}</span>
+              </div>
+              <div class="transfer-secondary">
+                <span class="scheduled-date">
+                  <mat-icon>event</mat-icon>
+                  {{ transfer.scheduledDate | dateFormat:'long' }}
+                </span>
+                <span class="status-badge scheduled">{{ transfer.status }}</span>
+              </div>
+            </div>
+
+            <button mat-icon-button 
+                    color="warn" 
+                    (click)="cancelScheduledTransfer(transfer)"
+                    matTooltip="Cancel transfer">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

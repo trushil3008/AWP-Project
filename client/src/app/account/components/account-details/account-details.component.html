@@ -1,0 +1,169 @@
+<div class="account-details-container">
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner diameter="48"></mat-spinner>
+    <p>Loading account details...</p>
+  </div>
+
+  <ng-container *ngIf="!isLoading && account">
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="header-content">
+        <h1 class="page-title">My Account</h1>
+        <p class="page-subtitle">View your account details and information</p>
+      </div>
+      <span class="status-badge" [ngClass]="getStatusClass()">
+        {{ account.status }}
+      </span>
+    </div>
+
+    <!-- Account Cards Grid -->
+    <div class="account-grid">
+      <!-- Balance Card -->
+      <mat-card class="balance-card">
+        <mat-card-content>
+          <div class="card-header">
+            <div class="card-icon">
+              <mat-icon>account_balance_wallet</mat-icon>
+            </div>
+            <span class="card-label">Current Balance</span>
+          </div>
+          <div class="balance-amount">
+            {{ account.balance | currencyFormat }}
+          </div>
+          <div class="balance-details">
+            <div class="detail-row">
+              <span>Available Balance</span>
+              <span>{{ account.availableBalance | currencyFormat }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Account Info Card -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Account Information</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-grid">
+            <div class="info-item">
+              <mat-icon>credit_card</mat-icon>
+              <div class="info-content">
+                <span class="info-label">Account Number</span>
+                <div class="info-value-row">
+                  <span class="info-value">
+                    {{ showAccountNumber ? account.accountNumber : (account.accountNumber | accountNumber) }}
+                  </span>
+                  <button mat-icon-button (click)="toggleAccountNumber()" class="action-btn">
+                    <mat-icon>{{ showAccountNumber ? 'visibility_off' : 'visibility' }}</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="copyToClipboard(account.accountNumber)" class="action-btn">
+                    <mat-icon>content_copy</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <mat-icon>category</mat-icon>
+              <div class="info-content">
+                <span class="info-label">Account Type</span>
+                <span class="info-value">{{ account.accountType }}</span>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <mat-icon>attach_money</mat-icon>
+              <div class="info-content">
+                <span class="info-label">Currency</span>
+                <span class="info-value">{{ account.currency }}</span>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <mat-icon>percent</mat-icon>
+              <div class="info-content">
+                <span class="info-label">Interest Rate</span>
+                <span class="info-value">{{ account.interestRate }}% p.a.</span>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Branch Info Card -->
+      <mat-card class="branch-card">
+        <mat-card-header>
+          <mat-card-title>Branch Details</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-grid">
+            <div class="info-item">
+              <mat-icon>business</mat-icon>
+              <div class="info-content">
+                <span class="info-label">Branch Name</span>
+                <span class="info-value">{{ account.branch }}</span>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <mat-icon>pin</mat-icon>
+              <div class="info-content">
+                <span class="info-label">IFSC Code</span>
+                <div class="info-value-row">
+                  <span class="info-value">{{ account.ifscCode }}</span>
+                  <button mat-icon-button (click)="copyToClipboard(account.ifscCode)" class="action-btn">
+                    <mat-icon>content_copy</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Activity Card -->
+      <mat-card class="activity-card">
+        <mat-card-header>
+          <mat-card-title>Account Activity</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-grid">
+            <div class="info-item">
+              <mat-icon>event</mat-icon>
+              <div class="info-content">
+                <span class="info-label">Account Opened</span>
+                <span class="info-value">{{ account.openedDate | dateFormat:'long' }}</span>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <mat-icon>update</mat-icon>
+              <div class="info-content">
+                <span class="info-label">Last Transaction</span>
+                <span class="info-value">{{ account.lastTransactionDate | dateFormat:'datetime' }}</span>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <button mat-raised-button color="primary" routerLink="/transactions/send">
+        <mat-icon>send</mat-icon>
+        Send Money
+      </button>
+      <button mat-stroked-button color="primary" routerLink="/transactions/history">
+        <mat-icon>history</mat-icon>
+        Transaction History
+      </button>
+      <button mat-stroked-button routerLink="/analytics">
+        <mat-icon>download</mat-icon>
+        Download Statement
+      </button>
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,124 @@
+<div class="admin-dashboard-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1 class="page-title">Admin Dashboard</h1>
+    <p class="page-subtitle">System overview and quick stats</p>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner diameter="48"></mat-spinner>
+    <p>Loading dashboard...</p>
+  </div>
+
+  <ng-container *ngIf="!isLoading">
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      <mat-card class="stat-card users" routerLink="/admin/users">
+        <mat-card-content>
+          <div class="stat-icon">
+            <mat-icon>people</mat-icon>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value">{{ stats.totalUsers }}</span>
+            <span class="stat-label">Total Users</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card active">
+        <mat-card-content>
+          <div class="stat-icon">
+            <mat-icon>person_check</mat-icon>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value">{{ stats.activeUsers }}</span>
+            <span class="stat-label">Active Users</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card frozen">
+        <mat-card-content>
+          <div class="stat-icon">
+            <mat-icon>person_off</mat-icon>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value">{{ stats.frozenAccounts }}</span>
+            <span class="stat-label">Frozen Accounts</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card transactions" routerLink="/admin/transactions">
+        <mat-card-content>
+          <div class="stat-icon">
+            <mat-icon>receipt_long</mat-icon>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value">{{ stats.totalTransactions | number }}</span>
+            <span class="stat-label">Total Transactions</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card volume">
+        <mat-card-content>
+          <div class="stat-icon">
+            <mat-icon>payments</mat-icon>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value">{{ stats.totalVolume | currencyFormat }}</span>
+            <span class="stat-label">Transaction Volume</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card pending">
+        <mat-card-content>
+          <div class="stat-icon">
+            <mat-icon>pending</mat-icon>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value">{{ stats.pendingTransactions }}</span>
+            <span class="stat-label">Pending</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions-section">
+      <h2>Quick Actions</h2>
+      <div class="actions-grid">
+        <mat-card class="action-card" routerLink="/admin/users">
+          <mat-card-content>
+            <mat-icon>manage_accounts</mat-icon>
+            <span>Manage Users</span>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="action-card" routerLink="/admin/transactions">
+          <mat-card-content>
+            <mat-icon>monitoring</mat-icon>
+            <span>Monitor Transactions</span>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="action-card">
+          <mat-card-content>
+            <mat-icon>summarize</mat-icon>
+            <span>Generate Reports</span>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="action-card">
+          <mat-card-content>
+            <mat-icon>settings</mat-icon>
+            <span>System Settings</span>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,88 @@
+<mat-toolbar class="header-toolbar">
+  <!-- Left Section -->
+  <div class="header-left">
+    <!-- Mobile Menu Toggle -->
+    <button mat-icon-button class="mobile-menu-btn" (click)="onToggleMobileMenu()">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <!-- Desktop Sidebar Toggle -->
+    <button mat-icon-button class="sidebar-toggle-btn" (click)="onToggleSidebar()">
+      <mat-icon>{{ isSidebarCollapsed ? 'chevron_right' : 'chevron_left' }}</mat-icon>
+    </button>
+
+    <!-- Greeting -->
+    <div class="header-greeting">
+      <span class="greeting-text">{{ getGreeting() }}</span>
+      <span class="user-name" *ngIf="authService.currentUser$ | async as user">
+        {{ user?.name || 'User' }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Right Section -->
+  <div class="header-right">
+    <!-- Notifications (placeholder) -->
+    <button mat-icon-button class="notification-btn" [matMenuTriggerFor]="notificationMenu">
+      <mat-icon>notifications_none</mat-icon>
+      <span class="notification-badge">3</span>
+    </button>
+
+    <mat-menu #notificationMenu="matMenu" class="notification-menu">
+      <div class="notification-header">
+        <span>Notifications</span>
+      </div>
+      <mat-divider></mat-divider>
+      <button mat-menu-item>
+        <mat-icon class="text-success">check_circle</mat-icon>
+        <span>Transfer completed successfully</span>
+      </button>
+      <button mat-menu-item>
+        <mat-icon class="text-warning">info</mat-icon>
+        <span>New login from Chrome</span>
+      </button>
+      <button mat-menu-item>
+        <mat-icon>account_balance</mat-icon>
+        <span>Statement is ready</span>
+      </button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item class="view-all">
+        <span>View all notifications</span>
+      </button>
+    </mat-menu>
+
+    <!-- User Menu -->
+    <button mat-button [matMenuTriggerFor]="userMenu" class="user-menu-btn">
+      <div class="user-avatar">
+        <ng-container *ngIf="authService.currentUser$ | async as user">
+          {{ getInitials(user?.name) }}
+        </ng-container>
+      </div>
+      <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
+    </button>
+
+    <mat-menu #userMenu="matMenu">
+      <div class="user-menu-header" *ngIf="authService.currentUser$ | async as user">
+        <div class="user-avatar large">{{ getInitials(user?.name) }}</div>
+        <div class="user-info">
+          <div class="user-name">{{ user?.name }}</div>
+          <div class="user-email">{{ user?.email }}</div>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+      <button mat-menu-item routerLink="/account">
+        <mat-icon>person</mat-icon>
+        <span>My Account</span>
+      </button>
+      <button mat-menu-item routerLink="/account/settings">
+        <mat-icon>settings</mat-icon>
+        <span>Settings</span>
+      </button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Logout</span>
+      </button>
+    </mat-menu>
+  </div>
+</mat-toolbar>

@@ -1,0 +1,53 @@
+<mat-card class="account-summary-card">
+  <div class="card-background"></div>
+  
+  <mat-card-content>
+    <div class="card-header">
+      <div class="card-title-section">
+        <span class="card-label">Primary Account</span>
+        <span class="status-badge" [ngClass]="getStatusClass()">
+          {{ account?.status || 'Active' }}
+        </span>
+      </div>
+      <button mat-icon-button (click)="toggleBalanceVisibility()" class="visibility-toggle">
+        <mat-icon>{{ showBalance ? 'visibility' : 'visibility_off' }}</mat-icon>
+      </button>
+    </div>
+
+    <div class="balance-section">
+      <span class="balance-label">Available Balance</span>
+      <div class="balance-amount">
+        <span class="currency">$</span>
+        <span class="amount" *ngIf="showBalance">
+          {{ account?.balance | number:'1.2-2' }}
+        </span>
+        <span class="amount hidden" *ngIf="!showBalance">
+          ****.**
+        </span>
+      </div>
+    </div>
+
+    <div class="account-details">
+      <div class="detail-item">
+        <mat-icon>credit_card</mat-icon>
+        <div class="detail-content">
+          <span class="detail-label">Account Number</span>
+          <span class="detail-value">{{ account?.accountNumber | accountNumber }}</span>
+        </div>
+      </div>
+      
+      <div class="detail-item">
+        <mat-icon>account_balance_wallet</mat-icon>
+        <div class="detail-content">
+          <span class="detail-label">Account Type</span>
+          <span class="detail-value">{{ account?.accountType || 'Savings' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-decoration">
+      <mat-icon>account_balance</mat-icon>
+      <span>SecureBank</span>
+    </div>
+  </mat-card-content>
+</mat-card>

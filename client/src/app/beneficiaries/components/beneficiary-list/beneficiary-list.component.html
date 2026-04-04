@@ -1,0 +1,150 @@
+<div class="beneficiary-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">Beneficiaries</h1>
+      <p class="page-subtitle">Manage your saved payment recipients</p>
+    </div>
+    <button mat-raised-button color="primary" (click)="toggleAddForm()">
+      <mat-icon>{{ showAddForm ? 'close' : 'person_add' }}</mat-icon>
+      {{ showAddForm ? 'Cancel' : 'Add Beneficiary' }}
+    </button>
+  </div>
+
+  <!-- Add Beneficiary Form -->
+  <mat-card class="add-form-card" *ngIf="showAddForm">
+    <mat-card-header>
+      <mat-card-title>Add New Beneficiary</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="addForm" (ngSubmit)="onSubmit()" class="add-form">
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Beneficiary Name</mat-label>
+            <input matInput formControlName="name" placeholder="Enter full name">
+            <mat-icon matPrefix>person</mat-icon>
+            <mat-error *ngIf="addForm.get('name').hasError('required')">
+              Name is required
+            </mat-error>
+            <mat-error *ngIf="addForm.get('name').hasError('minlength')">
+              Name must be at least 2 characters
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Account Number</mat-label>
+            <input matInput formControlName="accountNumber" placeholder="Enter account number">
+            <mat-icon matPrefix>credit_card</mat-icon>
+            <mat-error *ngIf="addForm.get('accountNumber').hasError('required')">
+              Account number is required
+            </mat-error>
+            <mat-error *ngIf="addForm.get('accountNumber').hasError('minlength')">
+              Account number must be at least 10 digits
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Bank Name (Optional)</mat-label>
+            <input matInput formControlName="bankName" placeholder="Enter bank name">
+            <mat-icon matPrefix>account_balance</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Nickname (Optional)</mat-label>
+            <input matInput formControlName="nickname" placeholder="Enter a nickname">
+            <mat-icon matPrefix>label</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="form-actions">
+          <button mat-stroked-button type="button" (click)="toggleAddForm()">
+            Cancel
+          </button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="isAdding">
+            <mat-spinner *ngIf="isAdding" diameter="20"></mat-spinner>
+            <span *ngIf="!isAdding">Add Beneficiary</span>
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner diameter="48"></mat-spinner>
+    <p>Loading beneficiaries...</p>
+  </div>
+
+  <!-- Beneficiaries List -->
+  <ng-container *ngIf="!isLoading">
+    <!-- Empty State -->
+    <mat-card class="empty-state-card" *ngIf="beneficiaries.length === 0">
+      <mat-card-content>
+        <div class="empty-state">
+          <mat-icon>people_outline</mat-icon>
+          <h3>No Beneficiaries Yet</h3>
+          <p>Add beneficiaries to quickly send money to your frequent contacts.</p>
+          <button mat-raised-button color="primary" (click)="toggleAddForm()">
+            <mat-icon>person_add</mat-icon>
+            Add Your First Beneficiary
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Beneficiaries Grid -->
+    <div class="beneficiaries-grid" *ngIf="beneficiaries.length > 0">
+      <mat-card class="beneficiary-card" *ngFor="let b of beneficiaries; let i = index">
+        <mat-card-content>
+          <div class="beneficiary-header">
+            <div class="avatar" [style.backgroundColor]="getAvatarColor(i)">
+              {{ getInitials(b.name) }}
+            </div>
+            <div class="beneficiary-info">
+              <h4 class="beneficiary-name">{{ b.name }}</h4>
+              <span class="beneficiary-nickname" *ngIf="b.nickname">({{ b.nickname }})</span>
+            </div>
+            <button mat-icon-button 
+                    [matMenuTriggerFor]="menu" 
+                    class="more-btn">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item routerLink="/transactions/send" [queryParams]="{beneficiaryId: b.id}">
+                <mat-icon>send</mat-icon>
+                <span>Send Money</span>
+              </button>
+              <button mat-menu-item (click)="deleteBeneficiary(b)">
+                <mat-icon color="warn">delete</mat-icon>
+                <span>Delete</span>
+              </button>
+            </mat-menu>
+          </div>
+
+          <div class="beneficiary-details">
+            <div class="detail-item">
+              <mat-icon>credit_card</mat-icon>
+              <span>{{ b.accountNumber | accountNumber }}</span>
+            </div>
+            <div class="detail-item" *ngIf="b.bankName">
+              <mat-icon>account_balance</mat-icon>
+              <span>{{ b.bankName }}</span>
+            </div>
+          </div>
+
+          <div class="beneficiary-actions">
+            <button mat-stroked-button 
+                    color="primary" 
+                    routerLink="/transactions/send"
+                    [queryParams]="{beneficiaryId: b.id}">
+              <mat-icon>send</mat-icon>
+              Send Money
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </ng-container>
+</div>

@@ -50,6 +50,9 @@ web_modules/
 # Optional npm cache directory
 .npm
 
+#Angular cache
+.angular
+
 # Optional eslint cache
 .eslintcache
 

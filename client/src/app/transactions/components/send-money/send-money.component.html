@@ -1,0 +1,193 @@
+<div class="send-money-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1 class="page-title">Send Money</h1>
+    <p class="page-subtitle">Transfer funds securely to any account</p>
+  </div>
+
+  <div class="send-money-content">
+    <!-- Transfer Form Card -->
+    <mat-card class="transfer-card" *ngIf="!showConfirmation">
+      <mat-card-content>
+        <!-- Transfer Mode Selection -->
+        <div class="transfer-mode">
+          <mat-radio-group [(ngModel)]="transferMode" (change)="onModeChange($event.value)">
+            <mat-radio-button value="beneficiary">
+              <span class="mode-label">
+                <mat-icon>people</mat-icon>
+                Send to Beneficiary
+              </span>
+            </mat-radio-button>
+            <mat-radio-button value="account">
+              <span class="mode-label">
+                <mat-icon>credit_card</mat-icon>
+                Enter Account Number
+              </span>
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+
+        <form [formGroup]="transferForm" class="transfer-form">
+          <!-- Beneficiary Selection -->
+          <ng-container *ngIf="transferMode === 'beneficiary'">
+            <mat-form-field appearance="outline">
+              <mat-label>Select Beneficiary</mat-label>
+              <mat-select formControlName="beneficiaryId">
+                <mat-option *ngFor="let b of beneficiaries" [value]="b.id">
+                  <div class="beneficiary-option">
+                    <span class="beneficiary-name">{{ b.name }}</span>
+                    <span class="beneficiary-account">{{ b.accountNumber }}</span>
+                  </div>
+                </mat-option>
+              </mat-select>
+              <mat-icon matPrefix>person</mat-icon>
+            </mat-form-field>
+
+            <div class="no-beneficiary" *ngIf="beneficiaries.length === 0 && !isLoadingBeneficiaries">
+              <p>No beneficiaries found.</p>
+              <a routerLink="/beneficiaries">Add a beneficiary first</a>
+            </div>
+          </ng-container>
+
+          <!-- Account Number Entry -->
+          <ng-container *ngIf="transferMode === 'account'">
+            <mat-form-field appearance="outline">
+              <mat-label>Account Number</mat-label>
+              <input matInput 
+                     formControlName="accountNumber" 
+                     placeholder="Enter recipient's account number">
+              <mat-icon matPrefix>credit_card</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Account Holder Name</mat-label>
+              <input matInput 
+                     formControlName="accountHolderName" 
+                     placeholder="Enter account holder name">
+              <mat-icon matPrefix>person</mat-icon>
+            </mat-form-field>
+          </ng-container>
+
+          <!-- Amount Field -->
+          <mat-form-field appearance="outline">
+            <mat-label>Amount</mat-label>
+            <input matInput 
+                   type="number" 
+                   formControlName="amount" 
+                   placeholder="Enter amount">
+            <span matPrefix class="currency-prefix">$</span>
+            <mat-error *ngIf="transferForm.get('amount').hasError('required')">
+              Amount is required
+            </mat-error>
+            <mat-error *ngIf="transferForm.get('amount').hasError('min')">
+              Amount must be greater than 0
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Description Field -->
+          <mat-form-field appearance="outline">
+            <mat-label>Description (Optional)</mat-label>
+            <input matInput 
+                   formControlName="description" 
+                   placeholder="What's this for?">
+            <mat-icon matPrefix>notes</mat-icon>
+            <mat-hint align="end">{{ transferForm.get('description').value?.length || 0 }}/100</mat-hint>
+          </mat-form-field>
+
+          <!-- Submit Button -->
+          <button mat-raised-button 
+                  color="primary" 
+                  type="button"
+                  class="submit-btn"
+                  (click)="showConfirm()">
+            <mat-icon>send</mat-icon>
+            Continue
+          </button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Confirmation Card -->
+    <mat-card class="confirmation-card" *ngIf="showConfirmation">
+      <mat-card-header>
+        <mat-card-title>Confirm Transfer</mat-card-title>
+        <mat-card-subtitle>Please review the details before confirming</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="confirmation-details">
+          <div class="amount-display">
+            <span class="label">Amount</span>
+            <span class="value">{{ transferForm.get('amount').value | currencyFormat }}</span>
+          </div>
+
+          <div class="detail-item" *ngIf="transferMode === 'beneficiary'">
+            <span class="label">To</span>
+            <span class="value">{{ getSelectedBeneficiary()?.name }}</span>
+          </div>
+
+          <div class="detail-item" *ngIf="transferMode === 'account'">
+            <span class="label">To</span>
+            <span class="value">{{ transferForm.get('accountHolderName').value || 'Account Holder' }}</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="label">Account Number</span>
+            <span class="value">
+              {{ transferMode === 'beneficiary' 
+                 ? getSelectedBeneficiary()?.accountNumber 
+                 : transferForm.get('accountNumber').value }}
+            </span>
+          </div>
+
+          <div class="detail-item" *ngIf="transferForm.get('description').value">
+            <span class="label">Description</span>
+            <span class="value">{{ transferForm.get('description').value }}</span>
+          </div>
+        </div>
+
+        <div class="confirmation-actions">
+          <button mat-stroked-button (click)="cancelConfirmation()" [disabled]="isLoading">
+            Cancel
+          </button>
+          <button mat-raised-button 
+                  color="primary" 
+                  (click)="onSubmit()"
+                  [disabled]="isLoading">
+            <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+            <span *ngIf="!isLoading">Confirm & Send</span>
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Info Panel -->
+    <div class="info-panel">
+      <mat-card class="info-card">
+        <mat-card-content>
+          <div class="info-item">
+            <mat-icon>schedule</mat-icon>
+            <div>
+              <strong>Instant Transfers</strong>
+              <p>Transfers are processed instantly 24/7</p>
+            </div>
+          </div>
+          <div class="info-item">
+            <mat-icon>security</mat-icon>
+            <div>
+              <strong>Secure & Encrypted</strong>
+              <p>All transactions are protected with bank-grade security</p>
+            </div>
+          </div>
+          <div class="info-item">
+            <mat-icon>receipt</mat-icon>
+            <div>
+              <strong>Transaction Receipt</strong>
+              <p>You'll receive a confirmation after transfer</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

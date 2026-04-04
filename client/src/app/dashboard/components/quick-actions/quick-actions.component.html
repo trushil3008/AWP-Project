@@ -1,0 +1,19 @@
+<mat-card class="quick-actions-card">
+  <mat-card-header>
+    <mat-card-title>Quick Actions</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="actions-grid">
+      <a *ngFor="let action of actions"
+         [routerLink]="action.route"
+         class="action-item"
+         [ngClass]="action.color">
+        <div class="action-icon">
+          <mat-icon>{{ action.icon }}</mat-icon>
+        </div>
+        <span class="action-label">{{ action.label }}</span>
+      </a>
+    </div>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,233 @@
+.send-money-container {
+  min-height: 100%;
+}
+
+/* Page Header */
+.page-header {
+  margin-bottom: var(--spacing-lg);
+}
+
+.page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.page-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* Content Layout */
+.send-money-content {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: var(--spacing-lg);
+  align-items: start;
+}
+
+/* Transfer Card */
+.transfer-card {
+  padding: var(--spacing-md);
+}
+
+/* Transfer Mode */
+.transfer-mode {
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-lg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.transfer-mode mat-radio-group {
+  display: flex;
+  gap: var(--spacing-lg);
+}
+
+.mode-label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.mode-label mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: var(--primary-color);
+}
+
+/* Transfer Form */
+.transfer-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.transfer-form mat-form-field {
+  width: 100%;
+}
+
+.currency-prefix {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-right: var(--spacing-xs);
+}
+
+.beneficiary-option {
+  display: flex;
+  flex-direction: column;
+}
+
+.beneficiary-name {
+  font-weight: 500;
+}
+
+.beneficiary-account {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.no-beneficiary {
+  text-align: center;
+  padding: var(--spacing-lg);
+  background-color: var(--background-color);
+  border-radius: var(--radius-md);
+}
+
+.no-beneficiary p {
+  margin-bottom: var(--spacing-sm);
+}
+
+.no-beneficiary a {
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
+.submit-btn {
+  height: 48px;
+  font-size: 1rem;
+  margin-top: var(--spacing-md);
+}
+
+.submit-btn mat-icon {
+  margin-right: var(--spacing-sm);
+}
+
+/* Confirmation Card */
+.confirmation-card {
+  padding: var(--spacing-md);
+}
+
+.confirmation-card mat-card-header {
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.confirmation-details {
+  background-color: var(--background-color);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+}
+
+.amount-display {
+  text-align: center;
+  padding-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.amount-display .label {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.amount-display .value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--spacing-sm) 0;
+}
+
+.detail-item .label {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.detail-item .value {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.confirmation-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: center;
+}
+
+.confirmation-actions button {
+  min-width: 140px;
+  height: 44px;
+}
+
+/* Info Panel */
+.info-panel {
+  position: sticky;
+  top: var(--spacing-lg);
+}
+
+.info-card mat-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.info-item {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.info-item mat-icon {
+  color: var(--primary-color);
+  flex-shrink: 0;
+}
+
+.info-item strong {
+  display: block;
+  font-size: 0.875rem;
+  margin-bottom: 4px;
+}
+
+.info-item p {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .send-money-content {
+    grid-template-columns: 1fr;
+  }
+
+  .info-panel {
+    position: static;
+  }
+
+  .transfer-mode mat-radio-group {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+}
