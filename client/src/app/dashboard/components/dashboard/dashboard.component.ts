@@ -5,8 +5,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { forkJoin } from 'rxjs';
 
 import { DashboardService } from '../../services/dashboard.service';
+import { AnalyticsService } from '../../../analytics/services/analytics.service';
 import { AccountSummaryComponent } from '../account-summary/account-summary.component';
 import { RecentTransactionsComponent } from '../recent-transactions/recent-transactions.component';
 import { QuickActionsComponent } from '../quick-actions/quick-actions.component';
@@ -32,8 +34,17 @@ export class DashboardComponent implements OnInit {
   isLoading = true;
   account = null;
   recentTransactions = [];
+  monthlyStats = {
+    income: 0,
+    expense: 0,
+    incomeChange: null as number | null,
+    expenseChange: null as number | null
+  };
 
-  constructor(private dashboardService: DashboardService) {}
+  constructor(
+    private dashboardService: DashboardService,
+    private analyticsService: AnalyticsService
+  ) {}
 
   ngOnInit() {
     this.loadDashboardData();
@@ -41,72 +52,56 @@ export class DashboardComponent implements OnInit {
 
   loadDashboardData() {
     this.isLoading = true;
-    
-    this.dashboardService.loadDashboardData().subscribe({
-      next: (data: any) => {
-        this.account = data.account?.data || data.account;
-        this.recentTransactions = data.transactions?.data?.transactions || data.transactions?.data || data.transactions || [];
+
+    forkJoin({
+      dashboard: this.dashboardService.loadDashboardData(),
+      monthly: this.analyticsService.getMonthlyAnalytics(new Date().getFullYear())
+    }).subscribe({
+      next: ({ dashboard, monthly }: any) => {
+        this.account = dashboard.account?.data || dashboard.account || null;
+        const txPayload = dashboard.transactions?.data || dashboard.transactions || {};
+        this.recentTransactions = txPayload?.transactions || txPayload || [];
+        this.applyMonthlyStats(monthly);
         this.isLoading = false;
       },
-      error: (error) => {
+      error: () => {
+        this.account = null;
+        this.recentTransactions = [];
+        this.monthlyStats = {
+          income: 0,
+          expense: 0,
+          incomeChange: null,
+          expenseChange: null
+        };
         this.isLoading = false;
-        // Use mock data for demo purposes
-        this.loadMockData();
       }
     });
   }
 
-  loadMockData() {
-    // Mock data for demonstration when API is not available
-    this.account = {
-      accountNumber: '1234567890123456',
-      accountType: 'Savings',
-      balance: 25480.50,
-      status: 'active',
-      currency: 'USD'
-    };
+  private applyMonthlyStats(monthlyData: any) {
+    const credits = monthlyData?.credits || [];
+    const debits = monthlyData?.debits || [];
+    const currentIndex = new Date().getMonth();
+    const prevIndex = currentIndex - 1;
 
-    this.recentTransactions = [
-      {
-        id: 1,
-        type: 'credit',
-        amount: 5000,
-        description: 'Salary Deposit',
-        date: new Date().toISOString(),
-        status: 'completed'
-      },
-      {
-        id: 2,
-        type: 'debit',
-        amount: 150.75,
-        description: 'Electricity Bill',
-        date: new Date(Date.now() - 86400000).toISOString(),
-        status: 'completed'
-      },
-      {
-        id: 3,
-        type: 'debit',
-        amount: 89.99,
-        description: 'Online Shopping',
-        date: new Date(Date.now() - 172800000).toISOString(),
-        status: 'completed'
-      },
-      {
-        id: 4,
-        type: 'credit',
-        amount: 200,
-        description: 'Transfer from John',
-        date: new Date(Date.now() - 259200000).toISOString(),
-        status: 'completed'
-      },
-      {
-        id: 5,
-        type: 'debit',
-        amount: 45.50,
-        description: 'Restaurant',
-        date: new Date(Date.now() - 345600000).toISOString(),
-        status: 'completed'
-      }
-    ];
+    const income = credits[currentIndex] || 0;
+    const expense = debits[currentIndex] || 0;
+    const prevIncome = prevIndex >= 0 ? (credits[prevIndex] || 0) : null;
+    const prevExpense = prevIndex >= 0 ? (debits[prevIndex] || 0) : null;
+
+    this.monthlyStats = {
+      income,
+      expense,
+      incomeChange: this.calculateChangePercentage(income, prevIncome),
+      expenseChange: this.calculateChangePercentage(expense, prevExpense)
+    };
+  }
+
+  private calculateChangePercentage(current: number, previous: number | null) {
+    if (previous === null || previous === undefined) return null;
+    if (previous === 0) {
+      return current > 0 ? 100 : 0;
+    }
+    return ((current - previous) / previous) * 100;
   }
 }

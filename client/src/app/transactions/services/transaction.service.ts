@@ -17,6 +17,15 @@ export class TransactionService {
 
   constructor(private http: HttpClient) {}
 
+  private normalizeTransactions(items: any[] = []) {
+    return items.map((tx: any) => ({
+      ...tx,
+      // UI table expects row.date; backend provides createdAt/completedAt.
+      date: tx?.date || tx?.completedAt || tx?.createdAt || null,
+      description: tx?.description || tx?.reference || 'Transfer'
+    }));
+  }
+
   /**
    * Get transactions with filters and pagination
    */
@@ -34,10 +43,19 @@ export class TransactionService {
       withCredentials: true 
     }).pipe(
       tap((response: any) => {
-        const transactions = response?.data?.transactions || response?.data || response || [];
+        const rawTransactions = response?.data?.transactions || response?.data || response || [];
+        const transactions = this.normalizeTransactions(rawTransactions);
         this.transactionsSubject.next(transactions);
       }),
-      map((response: any) => response?.data || response)
+      map((response: any) => {
+        const payload = response?.data || response;
+        const rawTransactions = payload?.transactions || [];
+
+        return {
+          ...payload,
+          transactions: this.normalizeTransactions(rawTransactions)
+        };
+      })
     );
   }
 

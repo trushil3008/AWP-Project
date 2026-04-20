@@ -4,7 +4,6 @@ const {
   ApiError, 
   generateTransactionId, 
   generateReference,
-  emailService,
   getPagination 
 } = require('../utils');
 const { SCHEDULED_STATUS, TRANSACTION_TYPES, TRANSACTION_STATUS, ACCOUNT_STATUS } = require('../config/constants');
@@ -270,17 +269,6 @@ class ScheduledService {
 
       await session.commitTransaction();
 
-      // Send notifications
-      const senderUser = await User.findById(scheduled.userId);
-      const receiverUser = await User.findById(scheduled.receiverUserId);
-      
-      if (senderUser) {
-        emailService.sendTransactionSuccess(senderUser, transaction[0], 'debit');
-      }
-      if (receiverUser) {
-        emailService.sendTransactionSuccess(receiverUser, transaction[0], 'credit');
-      }
-
       console.log(`✅ Scheduled transaction ${scheduled._id} executed successfully`);
 
       return {
@@ -295,12 +283,6 @@ class ScheduledService {
       // Mark as failed
       scheduled.markFailed(error.message);
       await scheduled.save();
-
-      // Send failure notification
-      const senderUser = await User.findById(scheduled.userId);
-      if (senderUser) {
-        emailService.sendTransactionFailed(senderUser, scheduled, error.message);
-      }
 
       console.error(`❌ Scheduled transaction ${scheduled._id} failed:`, error.message);
 

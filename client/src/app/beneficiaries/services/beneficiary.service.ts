@@ -14,6 +14,14 @@ export class BeneficiaryService {
 
   constructor(private http: HttpClient) {}
 
+  private normalizeBeneficiaries(response: any) {
+    if (Array.isArray(response?.data)) return response.data;
+    if (Array.isArray(response?.data?.beneficiaries)) return response.data.beneficiaries;
+    if (Array.isArray(response?.beneficiaries)) return response.beneficiaries;
+    if (Array.isArray(response)) return response;
+    return [];
+  }
+
   /**
    * Get all beneficiaries
    */
@@ -22,9 +30,13 @@ export class BeneficiaryService {
       withCredentials: true 
     }).pipe(
       tap((response: any) => {
-        this.beneficiariesSubject.next(response.data || response || []);
+        this.beneficiariesSubject.next(this.normalizeBeneficiaries(response));
       })
     );
+  }
+
+  parseBeneficiariesResponse(response: any) {
+    return this.normalizeBeneficiaries(response);
   }
 
   /**
@@ -75,7 +87,7 @@ export class BeneficiaryService {
    * Check if beneficiary already exists
    */
   isDuplicate(accountNumber) {
-    const beneficiaries = this.beneficiariesSubject.value;
+    const beneficiaries = this.beneficiariesSubject.value || [];
     return beneficiaries.some(b => b.accountNumber === accountNumber);
   }
 

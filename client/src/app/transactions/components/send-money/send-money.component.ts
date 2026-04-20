@@ -73,17 +73,12 @@ export class SendMoneyComponent implements OnInit {
     
     this.beneficiaryService.getBeneficiaries().subscribe({
       next: (response: any) => {
-        this.beneficiaries = response.data || response || [];
+        this.beneficiaries = this.beneficiaryService.parseBeneficiariesResponse(response);
         this.isLoadingBeneficiaries = false;
       },
       error: (error) => {
         this.isLoadingBeneficiaries = false;
-        // Load mock data
-        this.beneficiaries = [
-          { id: 1, name: 'John Doe', accountNumber: '9876543210', bank: 'Chase Bank' },
-          { id: 2, name: 'Jane Smith', accountNumber: '1234567890', bank: 'Bank of America' },
-          { id: 3, name: 'Bob Wilson', accountNumber: '5555666677', bank: 'Wells Fargo' }
-        ];
+        this.beneficiaries = [];
       }
     });
   }

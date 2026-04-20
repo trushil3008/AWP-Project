@@ -9,6 +9,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
+import { RouterModule } from '@angular/router';
 
 import { BeneficiaryService } from '../../services/beneficiary.service';
 import { NotificationService } from '../../../core/services/notification.service';
@@ -20,6 +22,7 @@ import { AccountNumberPipe } from '../../../shared/pipes/account-number.pipe';
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     ReactiveFormsModule,
     MatCardModule,
     MatFormFieldModule,
@@ -29,6 +32,7 @@ import { AccountNumberPipe } from '../../../shared/pipes/account-number.pipe';
     MatProgressSpinnerModule,
     MatDialogModule,
     MatTooltipModule,
+    MatMenuModule,
     AccountNumberPipe
   ],
   templateUrl: './beneficiary-list.component.html',
@@ -67,17 +71,12 @@ export class BeneficiaryListComponent implements OnInit {
 
     this.beneficiaryService.getBeneficiaries().subscribe({
       next: (response: any) => {
-        this.beneficiaries = response.data || response || [];
+        this.beneficiaries = this.beneficiaryService.parseBeneficiariesResponse(response);
         this.isLoading = false;
       },
       error: () => {
         this.isLoading = false;
-        // Load mock data
-        this.beneficiaries = [
-          { id: 1, name: 'John Doe', accountNumber: '9876543210123456', bankName: 'Chase Bank', nickname: 'John' },
-          { id: 2, name: 'Jane Smith', accountNumber: '1234567890123456', bankName: 'Bank of America', nickname: 'Jane' },
-          { id: 3, name: 'Bob Wilson', accountNumber: '5555666677778888', bankName: 'Wells Fargo', nickname: '' }
-        ];
+        this.beneficiaries = [];
       }
     });
   }

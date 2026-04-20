@@ -100,10 +100,18 @@
         <mat-card-content>
           <div class="info-grid">
             <div class="info-item">
+              <mat-icon>account_balance</mat-icon>
+              <div class="info-content">
+                <span class="info-label">Bank Name</span>
+                <span class="info-value">{{ branchBankName }}</span>
+              </div>
+            </div>
+
+            <div class="info-item">
               <mat-icon>business</mat-icon>
               <div class="info-content">
                 <span class="info-label">Branch Name</span>
-                <span class="info-value">{{ account.branch }}</span>
+                <span class="info-value">{{ branchName }}</span>
               </div>
             </div>
 
@@ -112,8 +120,8 @@
               <div class="info-content">
                 <span class="info-label">IFSC Code</span>
                 <div class="info-value-row">
-                  <span class="info-value">{{ account.ifscCode }}</span>
-                  <button mat-icon-button (click)="copyToClipboard(account.ifscCode)" class="action-btn">
+                  <span class="info-value">{{ branchIfscCode }}</span>
+                  <button mat-icon-button (click)="copyToClipboard(branchBankName + ' - ' + branchName + ' - ' + branchIfscCode)" class="action-btn" matTooltip="Copy all details">
                     <mat-icon>content_copy</mat-icon>
                   </button>
                 </div>

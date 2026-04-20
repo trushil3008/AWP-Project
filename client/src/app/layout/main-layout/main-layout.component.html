@@ -1,35 +1,11 @@
-<div class="app-layout" [class.sidebar-collapsed]="isSidebarCollapsed">
-  <!-- Sidebar -->
-  <aside class="sidebar" [class.collapsed]="isSidebarCollapsed" [class.mobile-open]="isMobileMenuOpen">
-    <app-sidebar 
-      [isCollapsed]="isSidebarCollapsed"
-      (menuItemClicked)="closeMobileMenu()">
-    </app-sidebar>
-  </aside>
+<div class="app-layout">
+  <header class="app-header">
+    <app-header></app-header>
+  </header>
 
-  <!-- Mobile overlay -->
-  <div 
-    class="mobile-overlay" 
-    [class.active]="isMobileMenuOpen"
-    (click)="closeMobileMenu()">
-  </div>
-
-  <!-- Main content area -->
-  <div class="main-wrapper">
-    <!-- Header -->
-    <header class="app-header">
-      <app-header
-        [isSidebarCollapsed]="isSidebarCollapsed"
-        (toggleSidebar)="toggleSidebar()"
-        (toggleMobileMenu)="toggleMobileMenu()">
-      </app-header>
-    </header>
-
-    <!-- Page content -->
-    <main class="main-content">
-      <div class="content-wrapper">
-        <router-outlet></router-outlet>
-      </div>
-    </main>
-  </div>
+  <main class="main-content">
+    <div class="content-wrapper">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
 </div>

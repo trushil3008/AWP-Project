@@ -4,7 +4,6 @@ const {
   ApiError, 
   generateTransactionId, 
   generateReference, 
-  emailService,
   getPagination 
 } = require('../utils');
 const { TRANSACTION_TYPES, TRANSACTION_STATUS, ACCOUNT_STATUS, LIMITS } = require('../config/constants');
@@ -106,10 +105,6 @@ class TransactionService {
       // Commit transaction
       await session.commitTransaction();
 
-      // Send notifications (async, don't wait)
-      emailService.sendTransactionSuccess(senderUser, transaction[0], 'debit');
-      emailService.sendTransactionSuccess(receiverUser, transaction[0], 'credit');
-
       return {
         transactionId: transaction[0].transactionId,
         amount: transaction[0].amount,
@@ -127,9 +122,6 @@ class TransactionService {
       
       // Log failed transaction
       console.error('Transaction failed:', error.message);
-      
-      // Send failure notification
-      emailService.sendTransactionFailed(senderUser, { amount, receiverAccount: receiverAccountNumber }, error.message);
       
       throw error;
     } finally {

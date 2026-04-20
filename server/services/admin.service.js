@@ -1,5 +1,5 @@
 const { User, Account, Transaction } = require('../models');
-const { ApiError, emailService, getPagination } = require('../utils');
+const { ApiError, getPagination } = require('../utils');
 const { ACCOUNT_STATUS, TRANSACTION_STATUS } = require('../config/constants');
 
 /**
@@ -156,9 +156,6 @@ class AdminService {
     account.status = ACCOUNT_STATUS.FROZEN;
     await account.save();
 
-    // Send notification
-    emailService.sendAccountFrozenNotification(account.userId);
-
     return {
       message: 'Account frozen successfully',
       account: {
@@ -188,9 +185,6 @@ class AdminService {
 
     account.status = ACCOUNT_STATUS.ACTIVE;
     await account.save();
-
-    // Send notification
-    emailService.sendAccountUnfrozenNotification(account.userId);
 
     return {
       message: 'Account unfrozen successfully',

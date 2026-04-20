@@ -179,28 +179,40 @@ export class AnalyticsDashboardComponent implements OnInit {
     this.isLoading = true;
 
     this.analyticsService.getMonthlyAnalytics(this.selectedYear).subscribe({
-      next: (response: any) => {
-        this.processData(response.data || response);
+      next: (data: any) => {
+        this.processData(data);
         this.isLoading = false;
       },
       error: () => {
-        // Use mock data
-        const mockData = this.analyticsService.getMockMonthlyData();
-        this.processData(mockData);
-        this.summary = this.analyticsService.getMockSummaryData();
+        this.barChartData = { labels: [], datasets: [] };
+        this.doughnutChartData = { labels: ['Income', 'Expenses'], datasets: [] };
+        this.lineChartData = { labels: [], datasets: [] };
+        this.summary = {
+          totalCredit: 0,
+          totalDebit: 0,
+          netBalance: 0,
+          transactionCount: 0,
+          averageTransaction: 0
+        };
         this.isLoading = false;
       }
     });
   }
 
-  processData(data) {
+  processData(data: any) {
+    const labels = data?.labels || [];
+    const credits = data?.credits || [];
+    const debits = data?.debits || [];
+    const creditCount = data?.creditCount || 0;
+    const debitCount = data?.debitCount || 0;
+
     // Bar Chart Data
     this.barChartData = {
-      labels: data.labels,
+      labels,
       datasets: [
         {
           label: 'Income',
-          data: data.credits,
+          data: credits,
           backgroundColor: 'rgba(76, 175, 80, 0.8)',
           borderColor: 'rgba(76, 175, 80, 1)',
           borderWidth: 1,
@@ -208,7 +220,7 @@ export class AnalyticsDashboardComponent implements OnInit {
         },
         {
           label: 'Expenses',
-          data: data.debits,
+          data: debits,
           backgroundColor: 'rgba(244, 67, 54, 0.8)',
           borderColor: 'rgba(244, 67, 54, 1)',
           borderWidth: 1,
@@ -218,8 +230,8 @@ export class AnalyticsDashboardComponent implements OnInit {
     };
 
     // Doughnut Chart Data
-    const totalCredit = data.credits.reduce((a, b) => a + b, 0);
-    const totalDebit = data.debits.reduce((a, b) => a + b, 0);
+  const totalCredit = credits.reduce((a, b) => a + b, 0);
+  const totalDebit = debits.reduce((a, b) => a + b, 0);
 
     this.doughnutChartData = {
       labels: ['Income', 'Expenses'],
@@ -240,9 +252,9 @@ export class AnalyticsDashboardComponent implements OnInit {
     };
 
     // Line Chart Data - Net Balance Trend
-    const netBalances = data.credits.map((credit, i) => credit - data.debits[i]);
+    const netBalances = credits.map((credit, i) => credit - (debits[i] || 0));
     this.lineChartData = {
-      labels: data.labels,
+      labels,
       datasets: [
         {
           label: 'Net Balance',
@@ -258,12 +270,13 @@ export class AnalyticsDashboardComponent implements OnInit {
     };
 
     // Update summary
+    const transactionCount = creditCount + debitCount;
     this.summary = {
-      totalCredit: totalCredit,
-      totalDebit: totalDebit,
+      totalCredit,
+      totalDebit,
       netBalance: totalCredit - totalDebit,
-      transactionCount: 156,
-      averageTransaction: (totalCredit + totalDebit) / 24
+      transactionCount,
+      averageTransaction: transactionCount > 0 ? (totalCredit + totalDebit) / transactionCount : 0
     };
   }
 

@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { AccountService } from '../../services/account.service';
 import { CurrencyFormatPipe } from '../../../shared/pipes/currency-format.pipe';
@@ -21,6 +22,7 @@ import { DateFormatPipe } from '../../../shared/pipes/date-format.pipe';
     MatIconModule,
     MatDividerModule,
     MatProgressSpinnerModule,
+    MatTooltipModule,
     CurrencyFormatPipe,
     AccountNumberPipe,
     DateFormatPipe
@@ -32,6 +34,9 @@ export class AccountDetailsComponent implements OnInit {
   account = null;
   isLoading = true;
   showAccountNumber = false;
+  readonly branchBankName = 'State Bank of India';
+  readonly branchName = 'Vande Mataram Gota Branch';
+  readonly branchIfscCode = 'SBIN0016032';
 
   constructor(private accountService: AccountService) {}
 

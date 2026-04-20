@@ -11,17 +11,17 @@
   <nav class="sidebar-nav">
     <mat-nav-list>
       <!-- Main Menu Items -->
-      <a mat-list-item
+      <button mat-list-item
          *ngFor="let item of menuItems"
-         [routerLink]="item.route"
-         routerLinkActive="active"
-         [routerLinkActiveOptions]="{ exact: item.exact }"
-         [matTooltip]="isCollapsed ? item.label : ''"
+        [class.active]="isActive(item.route, item.exact)"
+         [matTooltip]="item.label"
+         [matTooltipDisabled]="!isCollapsed"
          matTooltipPosition="right"
-         (click)="onMenuItemClick()">
+         type="button"
+        (click)="onMenuItemClick(item.route, $event)">
         <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
         <span matListItemTitle *ngIf="!isCollapsed">{{ item.label }}</span>
-      </a>
+      </button>
 
       <!-- Admin Section -->
       <ng-container *ngIf="authService.isAdmin()">
@@ -31,17 +31,17 @@
           Admin
         </div>
 
-        <a mat-list-item
+        <button mat-list-item
            *ngFor="let item of adminMenuItems"
-           [routerLink]="item.route"
-           routerLinkActive="active"
-           [routerLinkActiveOptions]="{ exact: item.exact }"
-           [matTooltip]="isCollapsed ? item.label : ''"
+            [class.active]="isActive(item.route, item.exact)"
+           [matTooltip]="item.label"
+           [matTooltipDisabled]="!isCollapsed"
            matTooltipPosition="right"
-           (click)="onMenuItemClick()">
+           type="button"
+            (click)="onMenuItemClick(item.route, $event)">
           <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
           <span matListItemTitle *ngIf="!isCollapsed">{{ item.label }}</span>
-        </a>
+        </button>
       </ng-container>
     </mat-nav-list>
   </nav>

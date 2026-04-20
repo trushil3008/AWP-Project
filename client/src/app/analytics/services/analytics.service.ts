@@ -31,11 +31,14 @@ export class AnalyticsService {
       map((response: any) => {
         const payload = response?.data || response;
         const monthly = payload?.monthlyData || [];
+        const totals = payload?.totals || {};
 
         return {
           labels: monthly.map(m => m.month),
           credits: monthly.map(m => m.credit?.total || 0),
           debits: monthly.map(m => m.debit?.total || 0),
+          creditCount: totals?.totalCreditCount || 0,
+          debitCount: totals?.totalDebitCount || 0,
           raw: payload
         };
       })

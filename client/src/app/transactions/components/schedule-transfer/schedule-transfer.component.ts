@@ -82,14 +82,10 @@ export class ScheduleTransferComponent implements OnInit {
   loadBeneficiaries() {
     this.beneficiaryService.getBeneficiaries().subscribe({
       next: (response: any) => {
-        this.beneficiaries = response.data || response || [];
+        this.beneficiaries = this.beneficiaryService.parseBeneficiariesResponse(response);
       },
       error: () => {
-        this.beneficiaries = [
-          { id: 1, name: 'John Doe', accountNumber: '9876543210' },
-          { id: 2, name: 'Jane Smith', accountNumber: '1234567890' },
-          { id: 3, name: 'Bob Wilson', accountNumber: '5555666677' }
-        ];
+        this.beneficiaries = [];
       }
     });
   }
