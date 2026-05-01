@@ -1,0 +1,52 @@
+<div class="auth-container admin" style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f5f5f5;">
+  <div class="auth-wrapper justify-center flex">
+    <div class="auth-form-container" style="padding: 10px; width: 400px; max-width: 100%;">
+      <mat-card class="auth-card admin-card">
+        <mat-card-header style="justify-content: center; text-align: center; margin-bottom: 24px;">
+          <div>
+            <mat-icon color="warn" style="font-size: 3rem; width: 3rem; height: 3rem;">admin_panel_settings</mat-icon>
+          </div>
+          <div>
+            <mat-card-title>Admin Login</mat-card-title>
+            <mat-card-subtitle>SecureBank Administrator Access</mat-card-subtitle>
+          </div>
+        </mat-card-header>
+
+        <mat-card-content class="mt-4">
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <mat-form-field appearance="outline" style="width: 100%; display: block; margin-bottom: 15px;">
+              <mat-label>Admin Email</mat-label>
+              <input matInput type="email" formControlName="email">
+              <mat-icon matPrefix>email</mat-icon>
+              <mat-error *ngIf="loginForm.get('email')?.invalid">
+                {{ getErrorMessage('email') }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" style="width: 100%; display: block; margin-bottom: 20px;">
+              <mat-label>Password</mat-label>
+              <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+              <mat-icon matPrefix>lock</mat-icon>
+              <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility()">
+                <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
+              <mat-error *ngIf="loginForm.get('password')?.invalid">
+                {{ getErrorMessage('password') }}
+              </mat-error>
+            </mat-form-field>
+
+            <button mat-raised-button color="warn" type="submit" style="width: 100%; padding: 10px; margin-top: 15px;" [disabled]="isLoading">
+              <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+              <span *ngIf="!isLoading">Login as Admin</span>
+            </button>
+          </form>
+        </mat-card-content>
+
+        <mat-card-footer style="text-align: center; padding-top: 20px; padding-bottom: 20px;">
+          <a routerLink="/auth/login" style="color: #1976d2; text-decoration: none;">Back to User Login</a>
+        </mat-card-footer>
+      </mat-card>
+    </div>
+  </div>
+</div>
+

@@ -46,7 +46,15 @@ export class AdminDashboardComponent implements OnInit {
 
     this.adminService.getDashboardStats().subscribe({
       next: (response: any) => {
-        this.stats = response.data || response;
+        const data = response.data || response;
+        this.stats = {
+          totalUsers: data.users?.total || 0,
+          activeUsers: data.users?.active || 0,
+          frozenAccounts: data.users?.frozenAccounts || 0,
+          totalTransactions: data.transactions?.total || 0,
+          totalVolume: data.transactions?.totalVolume || 0,
+          pendingTransactions: data.transactions?.pending || 0
+        };
         this.isLoading = false;
       },
       error: () => {

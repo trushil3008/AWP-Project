@@ -5,23 +5,25 @@
         <mat-icon>{{ isMobileNavOpen ? 'close' : 'menu' }}</mat-icon>
       </button>
 
-      <button class="brand" mat-button (click)="onNavClick('/dashboard')" type="button">
+      <button class="brand" mat-button (click)="onNavClick(authService.isAdmin() ? '/admin' : '/dashboard')" type="button">
         <span class="brand-mark">SB</span>
         <span class="brand-name">SecureBank</span>
       </button>
     </div>
 
     <nav class="desktop-nav" aria-label="Main navigation">
-      <button
-        *ngFor="let item of navItems"
-        mat-button
-        type="button"
-        class="nav-link"
-        [class.active]="isActive(item.route, item.exact)"
-        (click)="onNavClick(item.route)">
-        <mat-icon>{{ item.icon }}</mat-icon>
-        <span>{{ item.label }}</span>
-      </button>
+      <ng-container *ngIf="!authService.isAdmin()">
+        <button
+          *ngFor="let item of navItems"
+          mat-button
+          type="button"
+          class="nav-link"
+          [class.active]="isActive(item.route, item.exact)"
+          (click)="onNavClick(item.route)">
+          <mat-icon>{{ item.icon }}</mat-icon>
+          <span>{{ item.label }}</span>
+        </button>
+      </ng-container>
 
       <ng-container *ngIf="authService.isAdmin()">
         <button
@@ -56,16 +58,18 @@
   </mat-toolbar>
 
   <nav class="mobile-nav" [class.open]="isMobileNavOpen" aria-label="Mobile navigation">
-    <button
-      *ngFor="let item of navItems"
-      mat-stroked-button
-      type="button"
-      class="mobile-link"
-      [class.active]="isActive(item.route, item.exact)"
-      (click)="onNavClick(item.route)">
-      <mat-icon>{{ item.icon }}</mat-icon>
-      <span>{{ item.label }}</span>
-    </button>
+    <ng-container *ngIf="!authService.isAdmin()">
+      <button
+        *ngFor="let item of navItems"
+        mat-stroked-button
+        type="button"
+        class="mobile-link"
+        [class.active]="isActive(item.route, item.exact)"
+        (click)="onNavClick(item.route)">
+        <mat-icon>{{ item.icon }}</mat-icon>
+        <span>{{ item.label }}</span>
+      </button>
+    </ng-container>
 
     <ng-container *ngIf="authService.isAdmin()">
       <button

@@ -10,9 +10,60 @@ const app = require('./app');
 const connectDB = require('./config/db');
 const { initializeJobs, stopJobs } = require('./jobs');
 const mongoose = require('mongoose');
+const { User } = require('./models');
+const { ROLES } = require('./config/constants');
 
 const PORT = process.env.PORT || 3000;
 let isShuttingDown = false;
+
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@gmail.com';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Admin@123';
+const ADMIN_NAME = process.env.ADMIN_NAME || 'Admin';
+
+const ensureAdminUser = async () => {
+  try {
+    const existing = await User.findOne({ email: ADMIN_EMAIL }).select('+password');
+
+    if (!existing) {
+      await User.create({
+        name: ADMIN_NAME,
+        email: ADMIN_EMAIL,
+        password: ADMIN_PASSWORD,
+        role: ROLES.ADMIN,
+        isActive: true
+      });
+      console.log('✅ Default admin user created');
+      return;
+    }
+
+    let needsSave = false;
+
+    if (existing.role !== ROLES.ADMIN) {
+      existing.role = ROLES.ADMIN;
+      needsSave = true;
+    }
+
+    if (!existing.isActive) {
+      existing.isActive = true;
+      needsSave = true;
+    }
+
+    const passwordMatches = await existing.comparePassword(ADMIN_PASSWORD);
+    if (!passwordMatches) {
+      existing.password = ADMIN_PASSWORD;
+      needsSave = true;
+    }
+
+    if (needsSave) {
+      await existing.save();
+      console.log('✅ Default admin user updated');
+    } else {
+      console.log('✅ Default admin user already present');
+    }
+  } catch (error) {
+    console.error('⚠️ Failed to ensure admin user:', error.message);
+  }
+};
 
 /**
  * Start the server
@@ -22,6 +73,8 @@ const startServer = async () => {
     // Connect to MongoDB
     await connectDB();
     console.log('✅ Database connected');
+
+    await ensureAdminUser();
 
     // Initialize cron jobs
     initializeJobs();

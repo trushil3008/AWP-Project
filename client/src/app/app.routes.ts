@@ -3,6 +3,10 @@ import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
 import { guestGuard } from './core/guards/guest.guard';
 
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from './core/services/auth.service';
+
 export const routes: Routes = [
   // Public routes (guest only)
   {
@@ -19,8 +23,11 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full'
+        pathMatch: 'full',
+        redirectTo: () => {
+          const authService = inject(AuthService);
+          return authService.isAdmin() ? '/admin' : '/dashboard';
+        }
       },
       {
         path: 'dashboard',
@@ -54,6 +61,9 @@ export const routes: Routes = [
   // Fallback
   {
     path: '**',
-    redirectTo: 'dashboard'
+    redirectTo: () => {
+      const authService = inject(AuthService);
+      return authService.isAdmin() ? '/admin' : '/dashboard';
+    }
   }
 ];

@@ -11,6 +11,10 @@ export const AUTH_ROUTES: Routes = [
     loadComponent: () => import('./components/login/login.component').then(m => m.LoginComponent)
   },
   {
+    path: 'admin-login',
+    loadComponent: () => import('./components/admin-login/admin-login.component').then(m => m.AdminLoginComponent)
+  },
+  {
     path: 'register',
     loadComponent: () => import('./components/register/register.component').then(m => m.RegisterComponent)
   }

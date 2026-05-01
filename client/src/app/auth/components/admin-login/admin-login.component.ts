@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -14,7 +14,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-admin-login',
   standalone: true,
   imports: [
     CommonModule,
@@ -28,11 +28,11 @@ import { NotificationService } from '../../../core/services/notification.service
     MatProgressSpinnerModule,
     MatCheckboxModule
   ],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  templateUrl: './admin-login.component.html',
+  styleUrl: './admin-login.component.css'
 })
-export class LoginComponent implements OnInit {
-  loginForm;
+export class AdminLoginComponent implements OnInit {
+  loginForm: any;
   isLoading = false;
   hidePassword = true;
 
@@ -44,13 +44,9 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.initForm();
-  }
-
-  initForm() {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required]],
       rememberMe: [false]
     });
   }
@@ -67,16 +63,16 @@ export class LoginComponent implements OnInit {
     this.authService.login({ email, password }).subscribe({
       next: (response) => {
         this.isLoading = false;
-        this.notificationService.success('Login successful! Welcome back.');
         if (this.authService.hasAdminRole()) {
+          this.notificationService.success('Admin login successful!');
           this.router.navigate(['/admin']);
         } else {
-          this.router.navigate(['/dashboard']);
+          this.notificationService.error('Unauthorized: Admin access required');
+          this.authService.logout().subscribe(); // Logout non-admin
         }
       },
       error: (error) => {
         this.isLoading = false;
-        // Error is handled by the interceptor
       }
     });
   }
@@ -85,22 +81,15 @@ export class LoginComponent implements OnInit {
     this.hidePassword = !this.hidePassword;
   }
 
-  getErrorMessage(fieldName) {
+  getErrorMessage(fieldName: string) {
     const field = this.loginForm.get(fieldName);
-    
-    if (field.hasError('required')) {
-      return `${this.capitalizeFirst(fieldName)} is required`;
-    }
-    if (field.hasError('email')) {
-      return 'Please enter a valid email address';
-    }
-    if (field.hasError('minlength')) {
-      return `${this.capitalizeFirst(fieldName)} must be at least ${field.errors.minlength.requiredLength} characters`;
-    }
+    if (field?.hasError('required')) return `${this.capitalizeFirst(fieldName)} is required`;
+    if (field?.hasError('email')) return 'Please enter a valid email address';
     return '';
   }
 
-  capitalizeFirst(str) {
+  capitalizeFirst(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 }
+
