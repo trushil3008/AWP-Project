@@ -97,7 +97,7 @@
   padding: var(--spacing-xxl);
 }
 
-.empty-state mat-icon {
+.empty-state > mat-icon {
   font-size: 64px;
   width: 64px;
   height: 64px;
@@ -120,6 +120,10 @@
 }
 
 .empty-state button mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  margin-bottom: 0;
   margin-right: var(--spacing-sm);
 }
 
