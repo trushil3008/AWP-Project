@@ -65,7 +65,7 @@ export class AnalyticsDashboardComponent implements OnInit {
         bodyFont: { size: 13 },
         callbacks: {
           label: function(context) {
-            return context.dataset.label + ': $' + context.raw.toLocaleString();
+            return context.dataset.label + ': ₹' + context.raw.toLocaleString();
           }
         }
       }
@@ -83,7 +83,7 @@ export class AnalyticsDashboardComponent implements OnInit {
         },
         ticks: {
           callback: function(value) {
-            return '$' + value.toLocaleString();
+            return '₹' + value.toLocaleString();
           }
         }
       }
@@ -114,7 +114,7 @@ export class AnalyticsDashboardComponent implements OnInit {
           label: function(context) {
             const total = context.dataset.data.reduce((a, b) => a + b, 0);
             const percentage = ((context.raw / total) * 100).toFixed(1);
-            return context.label + ': $' + context.raw.toLocaleString() + ' (' + percentage + '%)';
+            return context.label + ': ₹' + context.raw.toLocaleString() + ' (' + percentage + '%)';
           }
         }
       }
@@ -149,7 +149,7 @@ export class AnalyticsDashboardComponent implements OnInit {
         },
         ticks: {
           callback: function(value) {
-            return '$' + value.toLocaleString();
+            return '₹' + value.toLocaleString();
           }
         }
       }

@@ -38,7 +38,7 @@
               <mat-icon class="stat-icon income">trending_up</mat-icon>
               <span class="stat-label">This Month's Income</span>
             </div>
-            <div class="stat-value income">+$ {{ monthlyStats.income | number:'1.2-2' }}</div>
+            <div class="stat-value income">+₹ {{ monthlyStats.income | number:'1.2-2' }}</div>
             <div class="stat-change" [class.positive]="(monthlyStats.incomeChange ?? 0) >= 0" [class.negative]="(monthlyStats.incomeChange ?? 0) < 0">
               <mat-icon>{{ (monthlyStats.incomeChange ?? 0) >= 0 ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
               <span *ngIf="monthlyStats.incomeChange !== null">{{ (monthlyStats.incomeChange < 0 ? -monthlyStats.incomeChange : monthlyStats.incomeChange) | number:'1.0-1' }}% from last month</span>
@@ -53,7 +53,7 @@
               <mat-icon class="stat-icon expense">trending_down</mat-icon>
               <span class="stat-label">This Month's Expenses</span>
             </div>
-            <div class="stat-value expense">-$ {{ monthlyStats.expense | number:'1.2-2' }}</div>
+            <div class="stat-value expense">-₹ {{ monthlyStats.expense | number:'1.2-2' }}</div>
             <div class="stat-change" [class.positive]="(monthlyStats.expenseChange ?? 0) >= 0" [class.negative]="(monthlyStats.expenseChange ?? 0) < 0">
               <mat-icon>{{ (monthlyStats.expenseChange ?? 0) >= 0 ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
               <span *ngIf="monthlyStats.expenseChange !== null">{{ (monthlyStats.expenseChange < 0 ? -monthlyStats.expenseChange : monthlyStats.expenseChange) | number:'1.0-1' }}% from last month</span>

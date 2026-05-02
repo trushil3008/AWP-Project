@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true
 })
 export class CurrencyFormatPipe implements PipeTransform {
-  transform(value, currencyCode = 'USD', showSymbol = true) {
+  transform(value, currencyCode = 'INR', showSymbol = true) {
     if (value === null || value === undefined) {
       return '';
     }
