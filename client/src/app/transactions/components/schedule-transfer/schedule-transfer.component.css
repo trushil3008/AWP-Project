@@ -57,9 +57,9 @@ mat-card-title mat-icon {
 }
 
 .currency-prefix {
+  font-size: 1rem;
   font-weight: 500;
   color: var(--text-secondary);
-  margin-right: var(--spacing-xs);
 }
 
 .beneficiary-option {
