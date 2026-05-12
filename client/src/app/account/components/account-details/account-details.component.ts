@@ -67,7 +67,7 @@ export class AccountDetailsComponent implements OnInit {
       balance: 25480.50,
       availableBalance: 25480.50,
       status: 'active',
-      currency: 'USD',
+      currency: 'INR',
       openedDate: '2023-01-15',
       lastTransactionDate: new Date().toISOString(),
       interestRate: 2.5,

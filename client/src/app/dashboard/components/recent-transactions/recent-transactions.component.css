@@ -41,7 +41,7 @@ mat-card-content {
   text-align: center;
 }
 
-.empty-state mat-icon {
+.empty-state > mat-icon {
   font-size: 48px;
   width: 48px;
   height: 48px;

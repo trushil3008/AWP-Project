@@ -179,18 +179,23 @@ mat-card-content {
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
+  min-height: 28px;
 }
 
 .action-btn {
   width: 28px;
   height: 28px;
-  line-height: 28px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .action-btn mat-icon {
   font-size: 18px;
   width: 18px;
   height: 18px;
+  line-height: 18px;
   color: var(--text-secondary);
 }
 
